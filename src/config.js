@@ -1,21 +1,124 @@
-// All personal content lives here. Photo paths are relative to public/.
+// ==========================================
+// A Little World For You — Customization Config
+// ==========================================
+
 export const story = {
-  name: 'Oun Leap', yourName: 'Your love', birthday: '2026-11-02',
-  music: '', // Example: '/music/our-song.mp3'. Leave empty for the built-in music-box melody.
-  heroPhoto: '/photos/memory-1.svg', finalPhoto: '/photos/memory-4.svg',
+  // Names & Dates
+  name: 'Oun Leap',
+  yourName: 'Your love',
+  birthday: '2026-11-02',
+
+  // Audio:
+  // Set to a custom file like '/music/our-song.mp3' in public/music/
+  // Or leave empty '' to enjoy the dreamy built-in Music Box synthesizer!
+  music: '',
+
+  // Photos:
+  // Paths are relative to the public/ folder.
+  // You can also preview photos live in the gallery using the upload button!
+  heroPhoto: '/photos/memory-1.svg',
+  finalPhoto: '/photos/memory-4.svg',
+
+  // Welcome Screen
   welcome: 'I made a little something just for you.',
   subtitle: 'Today is all about you, the most beautiful part of my world.',
-  letter: `My Love,\n\nHappy Birthday to the most beautiful girl in my world.\n\nEvery moment with you has become a memory I want to keep forever. You make my ordinary days feel extraordinary, and you bring happiness into my life in ways I cannot fully explain.\n\nOn your special day, I hope your heart is filled with the same love, warmth, and happiness that you bring into mine.\n\nThank you for making me smile, and for being exactly who you are. I hope we create countless more beautiful memories together.\n\nHappy Birthday, My Princess.`,
-  reasons: ['Your smile brightens my darkest days.', 'You make ordinary moments extraordinary.', 'I love the way you laugh.', 'You always make me feel special.', 'Your kindness makes the world more beautiful.', 'Being with you feels like home.', 'You understand me in ways nobody else does.', 'Every memory with you is precious.', 'You inspire me to become a better person.', "Because you’re you, and that’s everything to me."],
-  memories: [
-    { photo: '/photos/memory-1.svg', caption: 'Our first little adventure', note: 'The beginning of my favorite story.' },
-    { photo: '/photos/memory-2.svg', caption: 'My favorite kind of day', note: 'Anywhere, as long as it’s with you.' },
-    { photo: '/photos/memory-3.svg', caption: 'A sunset worth keeping', note: 'Some moments feel like forever.' },
-    { photo: '/photos/memory-4.svg', caption: 'Every moment with you', note: 'You make the little things beautiful.' },
-    { photo: '/photos/memory-5.svg', caption: 'My favorite person', note: 'Always you. In every little universe.' },
-    { photo: '/photos/memory-6.svg', caption: 'More memories to come', note: 'The best pages are still unwritten.' }
+
+  // The Love Letter (supports paragraph breaks)
+  letter: `My Love,
+
+Happy Birthday to the most beautiful girl in my world.
+
+Every moment with you has become a memory I want to keep forever. You make my ordinary days feel extraordinary, and you bring happiness into my life in ways I cannot fully explain.
+
+On your special day, I hope your heart is filled with the same love, warmth, and happiness that you bring into mine.
+
+Thank you for making me smile, and for being exactly who you are. I hope we create countless more beautiful memories together.
+
+Happy Birthday, My Princess.`,
+
+  // 10 Reasons Why I Love You
+  reasons: [
+    'Your smile brightens my darkest days.',
+    'You make ordinary moments extraordinary.',
+    'I love the way you laugh.',
+    'You always make me feel special.',
+    'Your kindness makes the world more beautiful.',
+    'Being with you feels like home.',
+    'You understand me in ways nobody else does.',
+    'Every memory with you is precious.',
+    'You inspire me to become a better person.',
+    'Because you’re you, and that’s everything to me.',
   ],
-  future: [{ icon: 'sunset', title: 'Chase a sunset', text: 'Stay until the sky turns pink.' }, { icon: 'plane', title: 'Get a little lost', text: 'Somewhere we’ve never been.' }, { icon: 'coffee', title: 'A table for two', text: 'New places. Our usual laughter.' }, { icon: 'cake', title: 'More birthdays', text: 'More candles, always together.' }, { icon: 'camera', title: 'A hundred silly photos', text: 'The blurry ones are my favorites.' }, { icon: 'heart', title: 'Keep choosing us', text: 'In all the little everyday ways.' }],
+
+  // Gallery of Memories
+  memories: [
+    {
+      photo: '/photos/memory-1.svg',
+      caption: 'Our first little adventure',
+      note: 'The beginning of my favorite story.',
+    },
+    {
+      photo: '/photos/memory-2.svg',
+      caption: 'My favorite kind of day',
+      note: 'Anywhere, as long as it’s with you.',
+    },
+    {
+      photo: '/photos/memory-3.svg',
+      caption: 'A sunset worth keeping',
+      note: 'Some moments feel like forever.',
+    },
+    {
+      photo: '/photos/memory-4.svg',
+      caption: 'Every moment with you',
+      note: 'You make the little things beautiful.',
+    },
+    {
+      photo: '/photos/memory-5.svg',
+      caption: 'My favorite person',
+      note: 'Always you. In every little universe.',
+    },
+    {
+      photo: '/photos/memory-6.svg',
+      caption: 'More memories to come',
+      note: 'The best pages are still unwritten.',
+    },
+  ],
+
+  // Our Someday & Bucket List
+  future: [
+    {
+      icon: 'sunset',
+      title: 'Chase a sunset',
+      text: 'Stay until the sky turns pink.',
+    },
+    {
+      icon: 'plane',
+      title: 'Get a little lost',
+      text: 'Somewhere we’ve never been.',
+    },
+    {
+      icon: 'coffee',
+      title: 'A table for two',
+      text: 'New places. Our usual laughter.',
+    },
+    {
+      icon: 'cake',
+      title: 'More birthdays',
+      text: 'More candles, always together.',
+    },
+    {
+      icon: 'camera',
+      title: 'A hundred silly photos',
+      text: 'The blurry ones are my favorites.',
+    },
+    {
+      icon: 'heart',
+      title: 'Keep choosing us',
+      text: 'In all the little everyday ways.',
+    },
+  ],
+
+  // Final Reveal Message & Forever Promise
   finalMessage: 'You are my favorite person, my happiest memory, and my most beautiful adventure.',
-  forever: 'I Love You, Always & Forever.'
+  forever: 'I Love You, Always & Forever.',
 };

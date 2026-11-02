@@ -1,38 +1,120 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { motion, AnimatePresence, useReducedMotion, useScroll } from 'motion/react';
-import { Heart, ArrowDown, ArrowUpRight, Music2, VolumeX, X, ChevronLeft, ChevronRight, Sparkles, Sunset, Plane, Coffee, Cake, Camera, RotateCcw } from 'lucide-react';
+import { motion, AnimatePresence, MotionConfig, useScroll } from 'motion/react';
 import { story } from './config';
+import { soundManager } from './audio/soundManager';
+import PetalsCanvas from './components/PetalsCanvas';
+import ClickHeartSparks from './components/ClickHeartSparks';
+import WelcomeModal from './components/WelcomeModal';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import MemoriesGallery from './components/MemoriesGallery';
+import ReasonsSection from './components/ReasonsSection';
+import LoveLetterSection from './components/LoveLetterSection';
+import BirthdayCakeSection from './components/BirthdayCakeSection';
+import FutureSection from './components/FutureSection';
+import GiftBoxSection from './components/GiftBoxSection';
+import Footer from './components/Footer';
 import './styles.css';
 
-function Photo({src, alt, ...props}) { return <img src={src} alt={alt} {...props} onError={e=>{ e.currentTarget.onerror=null; e.currentTarget.src='/photos/memory-1.svg'; }}/>; }
 function App() {
- const [entered,setEntered]=useState(false),[ready,setReady]=useState(false),[opened,setOpened]=useState([]),[letter,setLetter]=useState(false),[wish,setWish]=useState(false),[gift,setGift]=useState(false),[photo,setPhoto]=useState(null),[playing,setPlaying]=useState(false),[burst,setBurst]=useState(0),[secret,setSecret]=useState(false);
- const reduced=useReducedMotion(), {scrollYProgress}=useScroll(), audio=useRef(null), synth=useRef(null), lastFocus=useRef(null);
- useEffect(()=>{let id=setTimeout(()=>setReady(true),500);return()=>clearTimeout(id)},[]);
- useEffect(()=>{if(photo===null&&!letter)return;lastFocus.current=document.activeElement;document.body.style.overflow='hidden';let id=setTimeout(()=>document.querySelector('.modal button')?.focus(),30);const key=e=>{if(e.key==='Escape'){setPhoto(null);setLetter(false)} if(e.key==='Tab'){let els=[...document.querySelectorAll('.modal button')];if(!els.length)return;let first=els[0],last=els.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}if(photo!==null&&e.key==='ArrowRight')setPhoto(p=>(p+1)%story.memories.length);if(photo!==null&&e.key==='ArrowLeft')setPhoto(p=>(p+story.memories.length-1)%story.memories.length)};window.addEventListener('keydown',key);return()=>{clearTimeout(id);document.body.style.overflow='';window.removeEventListener('keydown',key);lastFocus.current?.focus()}},[photo,letter]);
- useEffect(()=>()=>{synth.current?.close();audio.current?.pause()},[]);
- const celebrate=()=>{setBurst(v=>v+1)};
- async function music(){if(playing){audio.current?.pause();await synth.current?.suspend();setPlaying(false);return}try{if(story.music){audio.current ||= new Audio(story.music);audio.current.loop=true;await audio.current.play()}else{if(!synth.current){const ctx=new AudioContext();synth.current=ctx;const notes=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46];const buffer=ctx.createBuffer(1,ctx.sampleRate*8,ctx.sampleRate);const data=buffer.getChannelData(0);for(let i=0;i<data.length;i++){let t=i/ctx.sampleRate,nt=t%1,f=notes[Math.floor(t)];data[i]=Math.sin(2*Math.PI*f*nt)*Math.exp(-nt*5)*.07}const source=ctx.createBufferSource();source.buffer=buffer;source.loop=true;source.connect(ctx.destination);source.start()}await synth.current.resume()}setPlaying(true)}catch{setPlaying(false)}}
- const enter=()=>{setEntered(true);celebrate()};
- const reveal={initial:{opacity:0,y:reduced?0:25},whileInView:{opacity:1,y:0},viewport:{once:true,amount:.12},transition:{duration:.7}};
- const icons={sunset:Sunset,plane:Plane,coffee:Coffee,cake:Cake,camera:Camera,heart:Heart};
- const date=new Date(story.birthday+'T12:00:00');
- return <><motion.div className="progress" style={{scaleX:scrollYProgress}}/>
- <AnimatePresence>{!ready&&<motion.div className="loading" exit={{opacity:0}}><Heart fill="currentColor"/><span>A little love is on its way…</span></motion.div>}</AnimatePresence>
- <AnimatePresence>{!entered&&ready&&<motion.div className="welcome" exit={{opacity:0,scale:1.05}} transition={{duration:.8}}><div className="welcome-ring"><Heart size={45} strokeWidth={1} /></div><span className="eyebrow">A LITTLE WORLD, MADE JUST FOR YOU</span><h1>Hey Beautiful<span className="rose">...</span></h1><p>{story.welcome}</p><button className="primary" onClick={enter}>Open Your Surprise <Heart size={16}/></button><span className="handwritten">a little magic awaits ♡</span></motion.div>}</AnimatePresence>
- <header><a href="#home" className="brand">for you<span>♡</span></a><nav aria-label="Story navigation"><a href="#memories">Our memories</a><a href="#reasons">Little reasons</a><a href="#letter">Love letter</a></nav><button className="music" onClick={music} aria-label={playing?'Pause music':'Play music'}>{playing?<Music2 size={16}/>:<VolumeX size={16}/>}<span>{playing?'Our little melody':'Play a little love'}</span></button></header>
- <main aria-hidden={!entered} inert={!entered?true:undefined}>
- <section className="hero" id="home"><div className="hero-spark s1">✧</div><div className="hero-spark s2">✧</div><div className="flower flower-one">✿</div><div className="flower flower-two">✿</div><motion.div {...reveal} className="hero-copy"><div className="eyebrow"><span className="tiny-line"/> TODAY, THE WORLD IS A LITTLE SWEETER</div><h1>Happy Birthday,<br/>My <em>Princess!</em><span className="outline-heart">♡</span></h1><p>{story.subtitle}</p><div className="dedication">To {story.name}, with all my heart.</div><a className="primary" href="#memories">Let’s make a little magic <ArrowDown size={16}/></a><div className="date"><span>✧</span> {Number.isNaN(date.getTime())?'Your special day':date.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})} <span>✧</span></div></motion.div><motion.div {...reveal} className="hero-art"><div className="orbit"/><span className="tag">my favorite person</span><div className="hero-polaroid"><span className="tape"/><Photo src={story.heroPhoto} alt={`A place for a favorite photo of ${story.name}`}/><span className="handwritten">You make my world bloom ♡</span></div><span className="small-note">a whole lot of love,<br/>wrapped up in you.</span><Heart className="art-heart" size={53} strokeWidth={1}/></motion.div><a href="#memories" className="scroll-note">A LOVE STORY IN LITTLE MOMENTS <ArrowDown size={14}/></a></section>
- <section id="memories" className="memories section"><motion.div {...reveal} className="section-head"><span className="eyebrow">01 / THE MOMENTS I KEEP</span><h2>Our beautiful <em>memories.</em></h2><p>If I could keep a moment forever, it would be one with you.</p></motion.div><div className="gallery">{story.memories.map((m,i)=><motion.button {...reveal} key={m.caption} className="polaroid" style={{'--tilt':`${i%2?3:-3}deg`}} onClick={()=>setPhoto(i)}><span className="photo-number">0{i+1}</span><Photo src={m.photo} alt={m.caption} loading="lazy"/><span className="handwritten">{m.caption}</span><span className="photo-hint">a memory to hold <ArrowUpRight size={12}/></span></motion.button>)}</div><p className="gallery-note">A few illustrated placeholders, waiting for our photographs. ♡</p></section>
- <section id="reasons" className="section reasons"><motion.div {...reveal} className="section-head"><span className="eyebrow">02 / IT’S ALWAYS THE LITTLE THINGS</span><h2>Ten little reasons.<br/><em>One very big love.</em></h2><p>There are a thousand reasons. Here are a few to keep.</p><span className="handwritten instruction">tap a heart to find a little truth ↴</span></motion.div><div className="hearts-grid">{story.reasons.map((reason,i)=><button key={reason} className={`reason ${opened.includes(i)?'revealed':''}`} aria-expanded={opened.includes(i)} onClick={()=>{setOpened(v=>v.includes(i)?v.filter(n=>n!==i):[...v,i]);if(!opened.includes(i))celebrate()}}><Heart className="reason-heart" fill="currentColor" strokeWidth={.4}/><span>{opened.includes(i)?reason:<><small>REASON</small>{String(i+1).padStart(2,'0')}</>}</span></button>)}</div><p className="counter">{opened.length} of {story.reasons.length} little love notes discovered</p></section>
- <section id="letter" className="section letter-section"><motion.div {...reveal} className="letter-copy"><span className="eyebrow">03 / WORDS I’VE BEEN SAVING</span><h2>A little letter.<br/><em>All of my heart.</em></h2><p>Some things are too lovely to leave unsaid.<br/>I have something to tell you…</p><button className="primary" onClick={()=>{setLetter(true);celebrate()}}>Open My Letter <Heart size={16}/></button></motion.div><button className="envelope" onClick={()=>setLetter(true)} aria-label="Open love letter"><span className="letter-peek handwritten">My love,</span><span className="envelope-flap"/><span className="seal">♡</span><span className="envelope-to handwritten">just for {story.name}</span></button></section>
- <section id="wish" className="section wish"><motion.div {...reveal} className="section-head"><span className="eyebrow">04 / A LITTLE BIRTHDAY MAGIC</span><h2>Close your eyes.<br/><em>Make a wish.</em></h2><p>For all the beautiful things your heart is dreaming of.</p></motion.div><div className={`cake-scene ${wish?'blown':''}`} role="img" aria-label={wish?'Pink birthday cake with extinguished candles':'Pink birthday cake with five glowing candles'}><span className="cake-spark">✧</span><div className="candles">{[0,1,2,3,4].map(i=><div className="candle" key={i} style={{'--i':i}}><span className="flame"/><span className="smoke"/></div>)}</div><div className="cake-top"/><div className="cake-body"><div className="icing">♡ &nbsp; ♡ &nbsp; ♡ &nbsp; ♡</div><span className="cake-message handwritten">happy birthday, love</span></div><div className="cake-plate"/></div><button className="primary" disabled={wish} onClick={()=>{setWish(true);celebrate()}}>{wish?'Your wish is on its way':'Blow Out the Candles'} <Sparkles size={16}/></button><div className="wish-result" aria-live="polite">{wish?'May all your wishes come true, my love. ♡':'Take a deep breath. This moment is yours.'}</div></section>
- <section id="future" className="section future"><motion.div {...reveal} className="section-head"><span className="eyebrow">05 / THE PAGES WE HAVEN’T WRITTEN</span><h2>So much more <em>with you.</em></h2><p>Beautiful things I want to do with you, one little adventure at a time.</p></motion.div><div className="future-grid">{story.future.map((f,i)=>{let Icon=icons[f.icon]||Heart;return <motion.div {...reveal} className="future-card" key={f.title}><span className="future-no">0{i+1}</span><Icon size={32} strokeWidth={1}/><h3>{f.title}</h3><p>{f.text}</p><span className="future-check">♡ on our someday list</span></motion.div>})}</div></section>
- <section id="gift" className={`section final ${gift?'gift-open':''}`}><motion.div {...reveal} className="section-head"><span className="eyebrow">06 / SAVED THE SWEETEST FOR LAST</span><h2>{gift?'Happy Birthday, My Love!': 'One last surprise'}<br/><em>{gift?'My always & forever.':'just for you.'}</em></h2></motion.div><AnimatePresence mode="wait">{!gift?<motion.div key="box" exit={{opacity:0,y:-25}} className="gift-content"><button className="gift-box" onClick={()=>{setGift(true);celebrate()}} aria-label="Unwrap your birthday gift"><span className="bow">୨୧</span><span className="gift-lid"/><span className="gift-body"/><span className="gift-ribbon"/></button><button className="primary" onClick={()=>{setGift(true);celebrate()}}>Open Your Gift <Sparkles size={16}/></button><p className="handwritten">wrapped with all the love in my heart</p></motion.div>:<motion.div key="reveal" initial={{opacity:0,scale:.85}} animate={{opacity:1,scale:1}} className="final-reveal"><div className="heart-photo"><Photo src={story.finalPhoto} alt="A place for our favorite photo together"/></div><p>{story.finalMessage}</p><div className="handwritten forever">{story.forever} ♡</div><button className="text-button" onClick={()=>{setGift(false);setWish(false);setOpened([]);setEntered(false);window.scrollTo({top:0,behavior:'instant'})}}><RotateCcw size={14}/> Experience Our Story Again</button></motion.div>}</AnimatePresence></section>
- </main><footer><button onClick={()=>setSecret(v=>!v)} aria-label="Discover a secret love note"><Heart size={19}/></button><p>{secret?'P.S. In every universe, I would still choose you.':'Made with love, for my favorite person.'}</p><span>YOURS, {story.yourName.toUpperCase()} · ALWAYS</span></footer>
- <AnimatePresence>{(photo!==null||letter)&&<motion.div className="modal-backdrop" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>{setLetter(false);setPhoto(null)}}><motion.div role="dialog" aria-modal="true" aria-label={letter?'A letter from my heart':story.memories[photo].caption} className={`modal ${letter?'letter-modal':'photo-modal'}`} initial={{y:40,opacity:0}} animate={{y:0,opacity:1}} onClick={e=>e.stopPropagation()}><button className="close" aria-label="Close dialog" onClick={()=>{setLetter(false);setPhoto(null)}}><X/></button>{letter?<><Heart className="letter-heart"/><div className="handwritten letter-text">{story.letter}</div><div className="handwritten signature">Forever yours,<br/>{story.yourName} ♡</div></>:<><Photo src={story.memories[photo].photo} alt={story.memories[photo].caption}/><h3 className="handwritten">{story.memories[photo].caption}</h3><p>{story.memories[photo].note}</p><div className="lightbox-controls"><button aria-label="Previous photo" onClick={()=>setPhoto(v=>(v+story.memories.length-1)%story.memories.length)}><ChevronLeft/></button><span>{photo+1} / {story.memories.length}</span><button aria-label="Next photo" onClick={()=>setPhoto(v=>(v+1)%story.memories.length)}><ChevronRight/></button></div></>}</motion.div></motion.div>}</AnimatePresence>
- {!reduced&&burst>0&&<div key={burst} className="particles" aria-hidden="true">{Array.from({length:25},(_,i)=><span style={{'--x':`${(i*37)%100}vw`,'--drift':`${i%2?100:-100}px`,'--delay':`${i*.025}s`,'--color':['#c26d8a','#f1d6ac','#e8a0bf'][i%3]}} key={i}>{i%3?'♡':'✦'}</span>)}</div>}
- </>;
+  const [entered, setEntered] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [replay, setReplay] = useState(0);
+  const { scrollYProgress } = useScroll();
+
+  // Music starts separately with the play button.
+  const handleEnter = (withMusic = false) => {
+    setEntered(true);
+    if (withMusic) handleToggleMusic();
+  };
+
+  useEffect(() => () => soundManager.stop(), []);
+
+  const handleToggleMusic = async () => {
+    const active = await soundManager.togglePlay(story.music);
+    setIsPlaying(active);
+  };
+
+  const handleResetStory = () => {
+    setReplay((value) => value + 1);
+    // Scroll back to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <div className="min-h-screen bg-[#fffaf8] text-[#644a50] relative selection:bg-rose-200 selection:text-rose-900">
+      {/* Top Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 via-rose-500 to-amber-400 origin-left z-50 pointer-events-none"
+        style={{ scaleX: scrollYProgress }}
+      />
+
+      {/* Atmospheric Floating Sakura/Rose Petals & Golden Sparkles */}
+      <PetalsCanvas />
+
+      {/* Interactive Cursor / Touch Hearts */}
+      <ClickHeartSparks />
+
+      {/* Entrance Welcome Screen */}
+      <AnimatePresence>
+        {!entered && (
+          <WelcomeModal
+            story={story}
+            onEnter={handleEnter}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Main Website Content */}
+      <div inert={!entered} className={!entered ? 'opacity-0 pointer-events-none' : 'opacity-100 transition-opacity duration-700'}>
+        <Navbar
+          name={story.name}
+          isPlaying={isPlaying}
+          onToggleMusic={handleToggleMusic}
+        />
+
+        <main key={replay}>
+          <Hero
+            story={story}
+            onSendLove={() => soundManager.playPop()}
+          />
+
+          <MemoriesGallery
+            memories={story.memories}
+          />
+
+          <ReasonsSection
+            reasons={story.reasons}
+          />
+
+          <LoveLetterSection
+            story={story}
+          />
+
+          <BirthdayCakeSection
+            story={story}
+          />
+
+          <FutureSection
+            future={story.future}
+          />
+
+          <GiftBoxSection
+            story={story}
+            onReset={handleResetStory}
+          />
+        </main>
+
+        <Footer key={`footer-${replay}`}
+          story={story}
+        />
+      </div>
+    </div>
+  );
 }
-createRoot(document.getElementById('root')).render(<App/>);
+
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  createRoot(rootElement).render(<MotionConfig reducedMotion="user"><App /></MotionConfig>);
+}
