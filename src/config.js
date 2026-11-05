@@ -5,8 +5,8 @@
 export const story = {
   // Names & Dates
   name: 'Oun Leap',
-  yourName: 'Your love',
-  birthday: '2026-11-02',
+  yourName: 'Bong Chheav',
+  birthday: '2026-11-09',
 
   // Audio:
   // Set to a custom file like '/music/our-song.mp3' in public/music/
