@@ -19,13 +19,62 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 132px;
+  scroll-padding-top: 164px;
 }
 
 body { margin: 0; min-width: 280px; }
-.chapter-nav { scrollbar-width: none; }
+.chapter-nav { position: relative; display: flex; flex: 1; min-width: 0; gap: 4px; overflow-x: auto; scrollbar-width: none; padding: 4px; }
 .chapter-nav::-webkit-scrollbar { display: none; }
-.story-header { box-shadow: 0 4px 24px #75445205; }
+.story-header { border-bottom: 1px solid #efdee3; box-shadow: 0 6px 28px #75445205; }
+.story-header-top { max-width: 1152px; margin: auto; padding: 18px 28px 16px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.story-brand { display: flex; align-items: center; gap: 12px; color: #553b43; text-decoration: none; flex-shrink: 0; }
+.story-brand-mark { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 16px; border: 1px solid #efd0da; color: #df638c; background: linear-gradient(145deg, #fffdfb, #ffeef3); box-shadow: 0 3px 9px #b5677c08; transform: rotate(-7deg); }
+.story-brand-mark svg { transform: rotate(7deg); }
+.story-brand-name { display: block; font-family: var(--font-handwriting); font-size: 30px; line-height: 1.1; }
+.story-brand-caption { display: block; font-size: 9px; color: #9b7783; letter-spacing: .07em; margin-top: 4px; }
+.story-header-dedication { display: flex; align-items: center; gap: 10px; color: #b58d9a; }
+.story-header-dedication > span:not(.dedication-text) { width: 26px; height: 1px; background: #ead5db; }
+.dedication-text { font-family: var(--font-serif); font-size: 12px; font-style: italic; color: #9d7784; }
+.story-music { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 6px 14px 6px 7px; border: 1px solid #ecd5de; border-radius: 999px; background: #fffcfd; font-size: 11px; color: #9f506c; cursor: pointer; transition: background 160ms, border-color 160ms; white-space: nowrap; }
+.story-music:hover { background: #fff0f5; border-color: #dba7b9; }
+.story-music-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #faedf2; }
+.story-music.is-playing { background: #fff0f5; border-color: #e8bdce; }
+.story-equalizer { display: flex; align-items: center; gap: 2px; height: 16px; margin-left: 3px; }
+.story-equalizer i { width: 2px; border-radius: 3px; height: 4px; background: #d989a4; }
+.story-equalizer i:nth-child(2) { height: 10px; animation-delay: -200ms; }
+.story-equalizer i:nth-child(3) { height: 7px; animation-delay: -400ms; }
+.story-equalizer i:nth-child(4) { height: 12px; animation-delay: -100ms; }
+.is-playing .story-equalizer i { animation-name: melody-wave; animation-duration: 900ms; animation-iteration-count: infinite; animation-direction: alternate; }
+@keyframes melody-wave { to { height: 3px; opacity: .5; } }
+.story-chapter-bar { display: flex; align-items: center; gap: 12px; max-width: 1152px; margin: auto; padding: 0 24px 11px; }
+.story-chapter-caption { display: flex; flex-direction: column; gap: 4px; padding: 0 20px 0 4px; border-right: 1px solid #ecdce2; font-size: 9px; text-transform: uppercase; letter-spacing: .12em; color: #9b7783; flex-shrink: 0; }
+.chapter-link { position: relative; display: flex; flex: 1 0 auto; justify-content: center; align-items: center; gap: 8px; min-height: 44px; padding: 9px 12px; border-radius: 12px; color: #886574; font-size: 11px; text-decoration: none; white-space: nowrap; border: 1px solid transparent; transition: color 160ms, background 160ms, border-color 160ms; }
+.chapter-link:hover { background: #fff1f5; color: #bb426e; }
+.chapter-link.is-active { background: #fce9f0; color: #b73e68; border-color: #f4d5e0; }
+.chapter-active-dot { width: 4px; height: 4px; border-radius: 50%; background: #d8648d; }
+.chapter-scroll { display: grid; place-items: center; flex-shrink: 0; width: 32px; min-height: 44px; border-radius: 10px; color: #aa617c; cursor: pointer; background: #fff6f9; border: 1px solid #f1e0e7; }
+.chapter-scroll:disabled { opacity: .3; cursor: default; }
+@media (max-width: 1000px) {
+  .story-chapter-caption { display: none; }
+  .story-chapter-bar { gap: 4px; padding-inline: 20px; }
+}
+@media (max-width: 639px) {
+  html { scroll-padding-top: 140px; }
+  .story-header-top { padding: 14px 16px 10px; gap: 10px; }
+  .story-brand { gap: 9px; min-width: 0; flex-shrink: 1; }
+  .story-brand-mark { width: 36px; height: 36px; border-radius: 12px; flex-shrink: 0; }
+  .story-brand-name { font-size: 25px; }
+  .story-brand-caption { font-size: 8px; max-width: 160px; }
+  .story-header-dedication, .story-equalizer { display: none; }
+  .story-music { gap: 6px; padding-right: 11px; font-size: 10px; flex-shrink: 0; }
+  .story-chapter-bar { padding: 0 10px 8px; }
+  .chapter-link { padding-inline: 11px; }
+}
+@media (max-width: 360px) {
+  .story-brand-caption { display: none; }
+  .story-brand-name { font-size: 22px; }
+  .story-brand-mark { display: none; }
+}
 .welcome-scene {
   background-image: radial-gradient(ellipse at 15% 20%, #f8cdda80, transparent 45%), radial-gradient(ellipse at 85% 80%, #f5dfbe80, transparent 45%);
 }
@@ -55,7 +104,71 @@ main section:not(#home)::before {
 #memories img { filter: saturate(0.92); }
 #reasons button { min-height: 170px; }
 .wish-note { background-image: linear-gradient(135deg, #fffdfb, #fff5f7); }
+.wish-section { background: radial-gradient(ellipse at 80% 50%, #fce7e780, transparent 65%), #fffaf8; }
+.wish-experience { position: relative; z-index: 20; }
+.wish-experience { display: grid; grid-template-columns: 0.95fr 1.05fr; text-align: left; border: 1px solid #efdcdf; border-radius: 28px; overflow: hidden; background: #fffdfb; box-shadow: 0 18px 65px -30px #98637445, 0 2px 5px #98637408; }
+.wish-writing { padding: 36px; display: flex; flex-direction: column; min-width: 0; }
+.wish-step { display: flex; align-items: center; gap: 9px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #855768; font-weight: 500; }
+.wish-step > span { display: grid; place-items: center; width: 25px; height: 25px; border: 1px solid #edced7; border-radius: 50%; letter-spacing: 0; background: #fff9fb; }
+.wish-input { border: 0; border-radius: 4px; min-height: 96px; }
+.wish-input-label { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; font-weight: 500; color: #68434f; margin-bottom: 14px; }
+.wish-input-label > span { font-size: 11px; font-weight: 400; color: #896770; background: #f8edf0; padding: 3px 8px; border-radius: 6px; }
+.wish-note:focus-within { border-color: #d791a8; box-shadow: 0 0 0 4px #fce9f080; }
+.wish-privacy { display: flex; align-items: center; gap: 8px; color: #886271; font-size: 12px; margin-top: 16px; }
+.wish-next { display: none; }
+.wish-suggestions { margin-top: 24px; }
+.wish-suggestions-title { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 500; color: #78505f; }
+.wish-suggestions-hint { font-size: 12px; color: #886271; line-height: 1.7; margin-top: 5px; }
+.wish-suggestions-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 13px; }
+.wish-suggestion { display: flex; align-items: center; gap: 7px; min-height: 48px; padding: 10px 11px; border: 1px solid #ecd7df; border-radius: 12px; background: #fffafc; text-align: left; color: #825666; font-size: 12px; line-height: 1.5; cursor: pointer; transition: background 160ms, border-color 160ms; }
+.wish-suggestion:hover { background: #ffedf3; border-color: #dba4b8; }
+.wish-suggestion.is-selected { background: #fce6ef; border-color: #cd7b98; color: #9d365b; }
+.wish-suggestion > span:nth-child(2) { flex: 1; overflow-wrap: anywhere; }
+.wish-suggestion-icon { font-size: 19px; line-height: 1; color: #c36b8a; flex-shrink: 0; }
+.wish-suggestion-status { min-height: 20px; margin-top: 9px; font-size: 11px; line-height: 1.7; color: #986479; }
+.wish-cake-title { font-family: var(--font-serif); font-size: 28px; line-height: 1.3; color: #62414e; margin-top: 15px; }
+.wish-action-hint { font-size: 14px; color: #775563; margin-bottom: 13px; }
+.wish-primary.wish-blow-button { min-height: 56px; font-size: 15px; border-radius: 16px; gap: 10px; background: linear-gradient(120deg, #d62d67, #dc286f); }
+.wish-tap-hint { font-size: 12px; line-height: 1.6; margin-top: 11px; color: #886271; }
+.wish-mic-option { margin-top: 22px; padding-top: 15px; border-top: 1px solid #ecd5de; }
+.wish-mic-toggle { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; padding: 9px 14px; color: #96506a; font-size: 13px; font-weight: 500; cursor: pointer; border-radius: 10px; transition: background 160ms; }
+.wish-mic-toggle:hover { background: #ffe7ef; }
+.wish-mic-option > p { color: #886271; font-size: 12px; line-height: 1.6; max-width: 290px; margin-inline: auto; }
+.wish-mic-privacy { display: flex; justify-content: center; align-items: center; gap: 6px; margin-top: 12px; }
+.wish-input:focus-visible { outline-width: 2px; outline-offset: 7px; }
+.wish-keepsake { display: flex; align-items: center; gap: 10px; padding-top: 48px; margin-top: auto; color: #b07c8d; font-family: var(--font-handwriting); font-size: 23px; }
+.wish-cake-panel { padding: 32px; text-align: center; border-left: 1px solid #efdcdf; background: radial-gradient(ellipse at 50% 35%, #fff0cf75, transparent 50%), linear-gradient(150deg, #fff7f4, #fff0f4); transition: background-color 300ms; }
+.wish-candle-status { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; color: #886271; margin-top: 10px; }
+.wish-candle-status > span { height: 5px; width: 5px; border-radius: 50%; }
+.wish-cake { margin-top: -6px; margin-bottom: 20px; max-width: 100%; }
+.wish-controls { max-width: 340px; margin-inline: auto; }
+.wish-listening-card { padding: 16px; margin-top: 10px; background: #fffdfbdf; border: 1px solid #edd8dd; border-radius: 16px; box-shadow: 0 3px 12px #a45d7405; }
+.wish-listening-heading { display: flex; gap: 11px; align-items: center; }
+.wish-mic-icon { display: grid; place-items: center; width: 38px; height: 38px; flex-shrink: 0; border-radius: 12px; background: #fceaf0; color: #ca587b; }
+.wish-mic-icon.is-active { background: #ffdfeb; box-shadow: 0 0 0 4px #fff0f5; }
+.wish-primary, .wish-secondary { display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 48px; padding: 12px 18px; border-radius: 12px; font: 500 14px var(--font-sans); cursor: pointer; transition: background 160ms, box-shadow 160ms, transform 160ms; }
+.wish-primary { background: linear-gradient(115deg, #ef396f, #f52283); color: white; border: 1px solid #ed3472; box-shadow: 0 4px 12px #ed34722b; }
+.wish-primary:hover { box-shadow: 0 5px 16px #ed347249; transform: translateY(-1px); }
+.wish-secondary { background: #fffdfb; color: #9c4764; border: 1px solid #e9cdd6; }
+.wish-secondary:hover { background: #fff3f7; border-color: #dbaabb; }
+.wish-listening-card.has-error { border-color: #dbaabb; background: #fff8fa; }
+.wish-success { padding: 20px 8px; }
+.wish-success-icon { width: 48px; height: 48px; display: inline-grid; place-items: center; color: #c34f77; border: 1px solid #ecc4d1; background: #fff9fb; border-radius: 50%; }
+@media (max-width: 767px) {
+  .wish-experience { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; border-radius: 22px; }
+  .wish-writing { padding: 26px 24px; }
+  .wish-writing h3 { font-size: 26px; margin-top: 16px; }
+  .wish-writing > p { margin-bottom: 16px; }
+  .wish-writing > p:last-of-type { margin-bottom: 0; }
+  .wish-keepsake { display: none; }
+  .wish-next { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 20px; min-height: 48px; padding: 12px 14px; font-size: 13px; font-weight: 500; color: #9c4764; background: #fff3f7; border: 1px solid #f0d4df; border-radius: 12px; }
+  .wish-cake-title { font-size: 26px; }
+  .wish-mic-option { margin-top: 18px; }
+  .wish-cake-panel { border-left: 0; border-top: 1px solid #efdcdf; padding: 25px 20px; }
+  .wish-input { min-height: 80px; height: 80px; }
+}
 @media (max-width: 639px) {
+  .wish-cake { transform: scale(0.85); transform-origin: bottom center; margin-top: -30px; }
   #home { padding-top: 42px; padding-bottom: 52px; }
   #home h1 { font-size: clamp(2.6rem, 10vw, 3.5rem); }
   #home > .grid { gap: 48px; }
@@ -65,6 +178,7 @@ main section:not(#home)::before {
 }
 :focus-visible { outline: 3px solid #e66487; outline-offset: 4px; }
 @media (max-width: 380px) {
+  .wish-cake { transform: scale(0.7); margin-top: -50px; }
   #wish > div > .relative, #letter .group { max-width: 100%; }
   #letter .group > .relative { max-width: calc(100vw - 3rem); }
   #memories > div > p { flex-wrap: wrap; }

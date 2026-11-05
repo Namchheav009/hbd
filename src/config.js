@@ -15,7 +15,7 @@ export const story = {
 
   // Photos:
   // Paths are relative to the public/ folder.
-  // You can also preview photos live in the gallery using the upload button!
+  // Add image files to public/photos/ and set their paths here and in memories below.
   heroPhoto: '/photos/memory-1.svg',
   finalPhoto: '/photos/memory-4.svg',
 

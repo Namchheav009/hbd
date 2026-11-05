@@ -44,11 +44,11 @@ export default function ReasonsSection({ reasons }) {
             02 / It’s Always The Little Things
           </span>
           <h2 className="font-serif text-3xl md:text-5xl font-normal text-[#52373f] mb-3">
-            Ten little reasons. <br />
+            Ten little love notes. <br />
             <em className="italic text-rose-500 font-serif">One very big love.</em>
           </h2>
           <p className="text-xs md:text-sm text-[#8c6f76] font-light">
-            There are a thousand reasons why I love you. Here are ten to hold close to your heart.
+            A few words from my heart to yours. Ten little notes to hold close, today and always.
           </p>
           <div className="font-handwriting text-2xl text-rose-400 mt-2">
             tap a heart to reveal a little truth ↴
@@ -114,7 +114,7 @@ export default function ReasonsSection({ reasons }) {
                   <div className="relative z-10 flex flex-col items-center">
                     <Heart className="w-8 h-8 text-rose-400 fill-rose-300/30 mb-2 animate-pulse" strokeWidth={1.5} />
                     <span className="text-[9px] uppercase tracking-[0.2em] text-[#a58890] font-medium">
-                      Reason
+                      Love note
                     </span>
                     <span className="font-serif text-2xl text-[#644a50] font-normal">
                       {String(index + 1).padStart(2, '0')}

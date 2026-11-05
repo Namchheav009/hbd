@@ -1,18 +1,15 @@
 import { imageFallback } from './imageFallback';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, X, ChevronLeft, ChevronRight, ImagePlus, Heart } from 'lucide-react';
+import { ArrowUpRight, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { soundManager } from '../audio/soundManager';
 import useDialog from './useDialog';
 
-export default function MemoriesGallery({ memories, onAddPhoto }) {
+export default function MemoriesGallery({ memories }) {
   const [activePhoto, setActivePhoto] = useState(null);
-  const [customPhotos, setCustomPhotos] = useState({});
-  const photoUrls = useRef({});
   const dialogRef = useDialog(activePhoto !== null, () => setActivePhoto(null), (direction) => {
     setActivePhoto((index) => (index + direction + memories.length) % memories.length);
   });
-  useEffect(() => () => Object.values(photoUrls.current).forEach(URL.revokeObjectURL), []);
 
   const handleOpenPhoto = (idx) => {
     setActivePhoto(idx);
@@ -35,18 +32,6 @@ export default function MemoriesGallery({ memories, onAddPhoto }) {
     soundManager.playPop();
   };
 
-  const handleFileUpload = (e, index) => {
-    const file = e.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
-      if (photoUrls.current[index]) URL.revokeObjectURL(photoUrls.current[index]);
-      const url = URL.createObjectURL(file);
-      photoUrls.current[index] = url;
-      setCustomPhotos((prev) => ({ ...prev, [index]: url }));
-      soundManager.playChime();
-    }
-    e.target.value = '';
-  };
-
   return (
     <section id="memories" className="py-20 px-6 bg-[#f7eee9]/60 border-y border-[#ecdfd8]">
       <div className="max-w-6xl mx-auto">
@@ -66,7 +51,6 @@ export default function MemoriesGallery({ memories, onAddPhoto }) {
         {/* Polaroid Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 max-w-5xl mx-auto">
           {memories.map((m, idx) => {
-            const photoSrc = customPhotos[idx] || m.photo;
             const tilt = idx % 2 === 0 ? '-rotate-2' : 'rotate-2';
 
             return (
@@ -83,26 +67,10 @@ export default function MemoriesGallery({ memories, onAddPhoto }) {
                   0{idx + 1}
                 </span>
 
-                {/* Upload custom photo quick button */}
-                <label
-                  className="absolute top-6 right-6 z-10 w-7 h-7 rounded-full bg-white/80 hover:bg-white text-rose-400 hover:text-rose-600 border border-pink-100 shadow-xs flex items-center justify-center cursor-pointer transition-colors"
-                  title="Upload / Preview your own photo"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <ImagePlus className="w-3.5 h-3.5" />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    aria-label={`Upload photo for ${m.caption}`}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onChange={(e) => handleFileUpload(e, idx)}
-                  />
-                </label>
-
                 {/* Photo container */}
                 <button type="button" aria-label={`View ${m.caption}`} onClick={() => handleOpenPhoto(idx)} className="overflow-hidden bg-[#ecdcd3] aspect-[4/3.5] rounded-xs mb-3 relative flex items-center justify-center cursor-pointer">
                   <img
-                    src={photoSrc}
+                    src={m.photo}
                     alt={m.caption}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
@@ -127,11 +95,7 @@ export default function MemoriesGallery({ memories, onAddPhoto }) {
 
         {/* Note under gallery */}
         <p className="text-center text-xs text-[#a5898f] mt-10 font-light flex items-center justify-center gap-2">
-          <span>Tap any polaroid to view our story, or tap</span>
-          <span className="inline-flex items-center gap-1 bg-white px-2 py-0.5 rounded-full border border-pink-100 text-rose-500 text-[10px]">
-            <ImagePlus className="w-3 h-3" /> upload
-          </span>
-          <span>to preview your favorite photos ♡</span>
+          <span>Tap any polaroid to view our story ♡</span>
         </p>
       </div>
 
@@ -165,7 +129,7 @@ export default function MemoriesGallery({ memories, onAddPhoto }) {
               {/* Photo */}
               <div className="overflow-hidden rounded-xl bg-[#f0e3db] aspect-[4/3] max-h-[50vh] flex items-center justify-center mb-5 shadow-sm">
                 <img
-                  src={customPhotos[activePhoto] || memories[activePhoto].photo}
+                  src={memories[activePhoto].photo}
                   alt={memories[activePhoto].caption}
                   className="w-full h-full object-contain"
                   onError={imageFallback}
