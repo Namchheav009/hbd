@@ -146,10 +146,10 @@ export default function LoveLetterSection({ story }) {
               {/* Signature */}
               <div className="mt-8 pt-6 border-t border-rose-100 text-right">
                 <div className="font-handwriting text-3xl text-rose-500">
-                  Forever yours,
+                  Forever grateful for you,
                 </div>
                 <div className="font-handwriting text-3xl text-[#52373f] mt-1">
-                  {story.yourName} ♡
+                  {story.yourName}❤️
                 </div>
               </div>
             </motion.div>

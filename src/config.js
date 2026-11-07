@@ -24,17 +24,29 @@ export const story = {
   subtitle: 'Today is all about you, the most beautiful part of my world.',
 
   // The Love Letter (supports paragraph breaks)
-  letter: `My Love,
+  letter: `To My Love, My Princess ❤️
 
-Happy Birthday to the most beautiful girl in my world.
+Happy Birthday to the most beautiful girl in my world. ❤️🎂
 
-Every moment with you has become a memory I want to keep forever. You make my ordinary days feel extraordinary, and you bring happiness into my life in ways I cannot fully explain.
+Today is all about you, my love, and I just want to remind you how special you are to me and how lucky I am to have you in my life.
 
-On your special day, I hope your heart is filled with the same love, warmth, and happiness that you bring into mine.
+Ever since you came into my life, everything has felt a little brighter, warmer, and more beautiful. You turn my ordinary days into unforgettable memories, and even the smallest moments with you mean more to me than words can explain.
 
-Thank you for making me smile, and for being exactly who you are. I hope we create countless more beautiful memories together.
+But what makes me love you even more is the way you always stand by my side. Thank you for always supporting me, believing in me, encouraging me, and never giving up on me, even during the times when things aren't easy. When I feel tired, stressed, or unsure of myself, you're one of the reasons I find the strength to keep going. Having someone like you who truly cares about me means more than you could ever imagine.
 
-Happy Birthday, My Princess.`,
+On your special day, I wish you endless happiness, good health, success, and all the beautiful things your heart dreams of. I hope life gives you as much happiness as you've brought into mine, because you deserve nothing less.
+
+I can't promise that every day will be perfect, but I promise to keep trying my best to make you smile, support your dreams, and be there for you, just as you've always been there for me.
+
+I look forward to creating more beautiful memories together, celebrating more birthdays by your side, and watching us grow together through every chapter of life.
+
+Thank you for being my happiness, my biggest supporter, and one of the most beautiful parts of my life.
+
+No matter how many birthdays come and go, I hope I will always have the chance to remind you how deeply loved and appreciated you are.
+
+Happy Birthday, My Princess. 👑❤️
+
+I love you more than words can ever express, and I'm so grateful that I get to love you.`,
 
   // 10 Reasons Why I Love You
   reasons: [
