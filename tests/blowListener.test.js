@@ -4,6 +4,43 @@ import { createBlowDetector, listenForBlow } from '../src/audio/blowListener.js'
 
 const wave = (volume) => new Float32Array(32).fill(volume);
 
+test('stopping the microphone restores playback without closing the music context', async (t) => {
+  const originalNavigator = Object.getOwnPropertyDescriptor(globalThis, 'navigator');
+  let grant;
+  let stopped = 0;
+  let resumed = 0;
+  const session = { type: 'playback' };
+  const context = {
+    state: 'running',
+    resume() { resumed++; return Promise.resolve(); },
+    close() { assert.fail('Microphone closed the music context'); },
+  };
+  Object.defineProperty(globalThis, 'navigator', { configurable: true, value: {
+    audioSession: session,
+    mediaDevices: { getUserMedia: () => new Promise((resolve) => { grant = resolve; }) },
+  } });
+  globalThis.window = { isSecureContext: true, AudioContext: class {} };
+  globalThis.cancelAnimationFrame = () => {};
+  t.after(() => {
+    if (originalNavigator) Object.defineProperty(globalThis, 'navigator', originalNavigator);
+    else delete globalThis.navigator;
+    delete globalThis.window;
+    delete globalThis.cancelAnimationFrame;
+  });
+  const stop = listenForBlow({
+    getAudioContext: () => context,
+    onState() {}, onLevel() {}, onBlow() {},
+    onError() { assert.fail('Cancelled microphone reported an error'); },
+  });
+  assert.equal(session.type, 'play-and-record');
+  stop();
+  assert.equal(session.type, 'playback');
+  assert.equal(resumed, 2);
+  grant({ getTracks: () => [{ stop() { stopped++; } }] });
+  await new Promise((resolve) => setImmediate(resolve));
+  assert.equal(stopped, 1);
+});
+
 test('ignores room noise and short spikes, detects a sustained breath', () => {
   const detect = createBlowDetector();
   assert.equal(detect(wave(0.01), 0).calibrating, true);

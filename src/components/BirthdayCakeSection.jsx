@@ -108,6 +108,10 @@ export default function BirthdayCakeSection({ story }) {
     }
     setMicError('');
     stopListening.current = listenForBlow({
+      getAudioContext: () => {
+        soundManager.init();
+        return soundManager.ctx;
+      },
       onState: setMicState,
       onLevel: setBreathLevel,
       onBlow: () => blowAllCandles(),

@@ -1,3 +1,5 @@
+import { updateAudioSession } from './audioSession.js';
+
 // Romantic Web Audio Synthesizer: Music Box & Sound Effects
 class RomanticSoundManager {
   constructor() {
@@ -12,6 +14,7 @@ class RomanticSoundManager {
   }
 
   init() {
+    updateAudioSession();
     if (!this.ctx || this.ctx.state === 'closed') {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) throw new Error('Web Audio is unavailable');

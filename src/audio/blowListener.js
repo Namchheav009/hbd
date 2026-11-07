@@ -1,3 +1,5 @@
+import { beginMicrophoneSession } from './audioSession.js';
+
 // Audio is analysed locally and is never connected to the speakers.
 export function createBlowDetector() {
   let baseline = 0;
@@ -17,9 +19,10 @@ export function createBlowDetector() {
   };
 }
 
-export function listenForBlow({ onState, onLevel, onBlow, onError }) {
+export function listenForBlow({ onState, onLevel, onBlow, onError, getAudioContext }) {
   let active = true;
   let stream, context, source, frame, timeout;
+  let endSession;
   const stop = () => {
     if (!active) return;
     active = false;
@@ -27,7 +30,13 @@ export function listenForBlow({ onState, onLevel, onBlow, onError }) {
     clearTimeout(timeout);
     stream?.getTracks().forEach((track) => track.stop());
     source?.disconnect();
-    if (context && context.state !== 'closed') void context.close().catch(() => {});
+    endSession?.();
+    if (context && context.state !== 'closed') {
+      if (getAudioContext) {
+        // The music owns this context. Restore it instead of closing it.
+        void context.resume().catch(() => {});
+      } else void context.close().catch(() => {});
+    }
   };
   const fail = (message) => {
     if (!active) return;
@@ -46,7 +55,8 @@ export function listenForBlow({ onState, onLevel, onBlow, onError }) {
         return;
       }
       onState('requesting');
-      context = new AudioContext();
+      endSession = beginMicrophoneSession();
+      context = getAudioContext ? getAudioContext() : new AudioContext();
       const resumed = context.resume();
       const permission = navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: false, autoGainControl: false }, video: false,
@@ -56,6 +66,9 @@ export function listenForBlow({ onState, onLevel, onBlow, onError }) {
       });
       timeout = setTimeout(() => fail('No breath detected yet. Try again, blow a little closer, or tap the candles.'), 25000);
       await Promise.all([resumed, permission]);
+      if (!active) return;
+      // Permission prompts and capture startup can interrupt Safari playback.
+      await context.resume();
       if (!active) return;
       source = context.createMediaStreamSource(stream);
       const analyser = context.createAnalyser();
