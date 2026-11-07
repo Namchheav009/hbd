@@ -47,6 +47,42 @@ test('unavailable audio reports stopped without rejecting', async () => {
   assert.equal(soundManager.isPlaying, false);
 });
 
+test('mobile synth waits for the context to resume before scheduling music', async () => {
+  let resume;
+  globalThis.window = { AudioContext: class extends FakeAudioContext {
+    state = 'suspended';
+    createBuffer() { return {}; }
+    createBufferSource() { return { connect() {}, disconnect() {}, start() {} }; }
+    resume() { return new Promise((resolve) => { resume = () => { this.state = 'running'; resolve(); }; }); }
+  } };
+  const pending = soundManager.togglePlay();
+  assert.equal(soundManager.musicNodes.size, 0);
+  resume();
+  assert.equal(await pending, true);
+  assert.ok(soundManager.musicNodes.size > 0);
+});
+
+test('interrupted iPhone audio is resumed on the next play tap', async () => {
+  let resumes = 0;
+  globalThis.window = { AudioContext: class extends FakeAudioContext {
+    state = 'interrupted';
+    resume() { resumes++; this.state = 'running'; return Promise.resolve(); }
+  } };
+  assert.equal(await soundManager.togglePlay(), true);
+  assert.equal(resumes, 1);
+});
+
+test('a failed mobile resume does not report music as playing', async () => {
+  globalThis.window = { AudioContext: class extends FakeAudioContext {
+    state = 'suspended';
+    createBuffer() { return {}; }
+    createBufferSource() { return { connect() {}, disconnect() {}, start() {} }; }
+    resume() { return Promise.reject(new Error('Blocked')); }
+  } };
+  assert.equal(await soundManager.togglePlay(), false);
+  assert.equal(soundManager.musicNodes.size, 0);
+});
+
 test('failed custom audio falls back to the synthesizer', async () => {
   globalThis.window = { AudioContext: FakeAudioContext };
   globalThis.Audio = class {

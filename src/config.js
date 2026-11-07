@@ -16,8 +16,8 @@ export const story = {
   // Photos:
   // Paths are relative to the public/ folder.
   // Add image files to public/photos/ and set their paths here and in memories below.
-  heroPhoto: '/photos/memory-1.svg',
-  finalPhoto: '/photos/memory-4.svg',
+  heroPhoto: '/photos/hm1.png',
+  finalPhoto: '/photos/fm.png',
 
   // Welcome Screen
   welcome: 'I made a little something just for you.',
@@ -53,33 +53,33 @@ Happy Birthday, My Princess.`,
   // Gallery of Memories
   memories: [
     {
-      photo: '/photos/memory-1.svg',
-      caption: 'Our first little adventure',
+      photo: '/photos/m1.jpg',
+      caption: 'Sweetie drink with oun leap',
       note: 'The beginning of my favorite story.',
     },
     {
-      photo: '/photos/memory-2.svg',
+      photo: '/photos/m2.jpg',
       caption: 'My favorite kind of day',
       note: 'Anywhere, as long as it’s with you.',
     },
     {
-      photo: '/photos/memory-3.svg',
-      caption: 'A sunset worth keeping',
+      photo: '/photos/m3.jpg',
+      caption: 'I want to hold your hand forever',
       note: 'Some moments feel like forever.',
     },
     {
-      photo: '/photos/memory-4.svg',
-      caption: 'Every moment with you',
+      photo: '/photos/m4.jpg',
+      caption: 'Every moment with u , bong jg hug too much',
       note: 'You make the little things beautiful.',
     },
     {
-      photo: '/photos/memory-5.svg',
-      caption: 'My favorite person',
+      photo: '/photos/m5.jpg',
+      caption: 'My special lady only in my hearth',
       note: 'Always you. In every little universe.',
     },
     {
-      photo: '/photos/memory-6.svg',
-      caption: 'More memories to come',
+      photo: '/photos/m6.jpg',
+      caption: 'cutie cutie besdoung bong',
       note: 'The best pages are still unwritten.',
     },
   ],

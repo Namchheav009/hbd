@@ -25,6 +25,7 @@ function App() {
 
   // Music starts separately with the play button.
   const handleEnter = (withMusic = false) => {
+    void soundManager.unlock().catch(() => {});
     setEntered(true);
     if (withMusic) handleToggleMusic();
   };

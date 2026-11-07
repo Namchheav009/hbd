@@ -12,13 +12,30 @@ class RomanticSoundManager {
   }
 
   init() {
-    if (!this.ctx) {
+    if (!this.ctx || this.ctx.state === 'closed') {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       if (!AudioContext) throw new Error('Web Audio is unavailable');
       this.ctx = new AudioContext();
     }
-    if (this.ctx.state === 'suspended') {
-      this.ctx.resume().catch(() => {});
+    // Safari can interrupt audio after locking the phone or using the microphone.
+    const ready = this.ctx.state !== 'running' ? this.ctx.resume() : Promise.resolve();
+    // Effects can use init synchronously; music callers also await the result.
+    ready.catch(() => {});
+    return ready;
+  }
+
+  unlock() {
+    try {
+      const ready = this.init();
+      // Start a silent buffer within the tap, before any asynchronous work.
+      const source = this.ctx.createBufferSource();
+      source.buffer = this.ctx.createBuffer(1, 1, this.ctx.sampleRate);
+      source.connect(this.ctx.destination);
+      source.onended = () => source.disconnect();
+      source.start(0);
+      return ready;
+    } catch {
+      return Promise.resolve();
     }
   }
 
@@ -212,6 +229,8 @@ class RomanticSoundManager {
 
     this.isPlaying = true;
     const request = ++this.playRequest;
+    // Unlock the fallback synthesizer while this call still belongs to a tap.
+    const ready = this.unlock();
 
     if (customMusicPath) {
       try {
@@ -228,21 +247,26 @@ class RomanticSoundManager {
       } catch (e) {
         if (request !== this.playRequest) return this.isPlaying;
         // Fallback to synth if custom mp3 fails or is missing
-        return this.startSynth();
+        return this.startSynth(request, ready);
       }
     } else {
-      return this.startSynth();
+      return this.startSynth(request, ready);
     }
   }
 
-  startSynth() {
+  async startSynth(request = this.playRequest, ready = this.init()) {
     try {
-      this.init();
+      await ready;
+      if (request !== this.playRequest) return this.isPlaying;
+      if (this.ctx?.state !== 'running') {
+        this.stop();
+        return false;
+      }
       this.startMusicBoxLoop();
       return true;
     } catch {
-      this.stop();
-      return false;
+      if (request === this.playRequest) this.stop();
+      return this.isPlaying;
     }
   }
 
